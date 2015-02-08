@@ -27,6 +27,7 @@ BIRTH:    If an unoccupied cell has three occupied neighbors, it becomes occupie
 """
 
 import random
+import time
 
 class cell:
     def __init__(self):
@@ -80,24 +81,35 @@ class world:
     
     def determine_survival(self, y, x):
         
-        
         currently_alive = (self.cell(y, x).state() == "A")
-            
-        print(y,x,currently_alive)
-        
-        
+
         # Count occupied neighbors (including own state for simplicity)
         occupied_neighbors = 0
-        for j in range(y-1, y+2):
-            for i in range (x-1, x+2):
-                if self.cell(j, i).state() == "A":
-                    occupied_neighbors += 1
         
-        print(y,x,occupied_neighbors)
+        # Top row
+        if self.cell(y-1, x-1).state() == "A":
+            occupied_neighbors += 1
+        if self.cell(y-1, x).state() == "A":
+            occupied_neighbors += 1   
+        if self.cell(y-1, x+1).state() == "A":
+            occupied_neighbors += 1
+
+        # Middle row, ignoring self
+        if self.cell(y, x-1).state() == "A":
+            occupied_neighbors += 1
+        if self.cell(y, x+1).state() == "A":
+            occupied_neighbors += 1
+
+        # Bottom row, ignoring self
+        if self.cell(y+1, x-1).state() == "A":
+            occupied_neighbors += 1
+        if self.cell(y+1, x).state() == "A":
+            occupied_neighbors += 1
+        if self.cell(y+1, x+1).state() == "A":
+            occupied_neighbors += 1
         
-        # Remove cell's own state from count.
+        
         if currently_alive:
-            occupied_neighbors -= 1  
             
             if occupied_neighbors in range (0,1) or occupied_neighbors in range (4,8):
                 # Death due to loneliness (0,1) or overcrowding (4,8)
@@ -132,8 +144,16 @@ class world:
         
 my_world = world(9)
 my_world.print_grid()
-my_world.next_frame()
-my_world.print_grid()
+
+x = ""
+
+for i in range(0,100):
+    my_world.next_frame()
+    my_world.print_grid()
+    print("-----------")
+    time.sleep(1)
+    #x = input("Press Enter to continue, x to end")
+    
 
 
 
