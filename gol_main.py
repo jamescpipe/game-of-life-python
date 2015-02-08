@@ -33,9 +33,9 @@ class cell:
     def __init__(self):
         
         if random.random() > 0.5:
-            self.__state = "A"
+            self.__state = "#"
         else:
-            self.__state = "_"
+            self.__state = " "
                 
     def state(self):
         return self.__state
@@ -81,31 +81,31 @@ class world:
     
     def determine_survival(self, y, x):
         
-        currently_alive = (self.cell(y, x).state() == "A")
+        currently_alive = (self.cell(y, x).state() == "#")
 
         # Count occupied neighbors (including own state for simplicity)
         occupied_neighbors = 0
         
         # Top row
-        if self.cell(y-1, x-1).state() == "A":
+        if self.cell(y-1, x-1).state() == "#":
             occupied_neighbors += 1
-        if self.cell(y-1, x).state() == "A":
+        if self.cell(y-1, x).state() == "#":
             occupied_neighbors += 1   
-        if self.cell(y-1, x+1).state() == "A":
+        if self.cell(y-1, x+1).state() == "#":
             occupied_neighbors += 1
 
         # Middle row, ignoring self
-        if self.cell(y, x-1).state() == "A":
+        if self.cell(y, x-1).state() == "#":
             occupied_neighbors += 1
-        if self.cell(y, x+1).state() == "A":
+        if self.cell(y, x+1).state() == "#":
             occupied_neighbors += 1
 
         # Bottom row, ignoring self
-        if self.cell(y+1, x-1).state() == "A":
+        if self.cell(y+1, x-1).state() == "#":
             occupied_neighbors += 1
-        if self.cell(y+1, x).state() == "A":
+        if self.cell(y+1, x).state() == "#":
             occupied_neighbors += 1
-        if self.cell(y+1, x+1).state() == "A":
+        if self.cell(y+1, x+1).state() == "#":
             occupied_neighbors += 1
         
         
@@ -113,18 +113,17 @@ class world:
             
             if occupied_neighbors in range (0,1) or occupied_neighbors in range (4,8):
                 # Death due to loneliness (0,1) or overcrowding (4,8)
-                return "_"
-            
+                return " "
             else: 
                 # Survival to the next generation
-                return "A"
+                return "#"
             
         else:
             if occupied_neighbors == 3:
                 # Birth - cell will become occupied next frame
-                return "A"
+                return "#"
             else:
-                return "_"
+                return " "
                 
         
     
