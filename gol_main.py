@@ -86,30 +86,14 @@ class world:
         # Count occupied neighbors (including own state for simplicity)
         occupied_neighbors = 0
         
-        # Top row
-        if self.cell(y-1, x-1).state() == "#":
-            occupied_neighbors += 1
-        if self.cell(y-1, x).state() == "#":
-            occupied_neighbors += 1   
-        if self.cell(y-1, x+1).state() == "#":
-            occupied_neighbors += 1
-
-        # Middle row, ignoring self
-        if self.cell(y, x-1).state() == "#":
-            occupied_neighbors += 1
-        if self.cell(y, x+1).state() == "#":
-            occupied_neighbors += 1
-
-        # Bottom row, ignoring self
-        if self.cell(y+1, x-1).state() == "#":
-            occupied_neighbors += 1
-        if self.cell(y+1, x).state() == "#":
-            occupied_neighbors += 1
-        if self.cell(y+1, x+1).state() == "#":
-            occupied_neighbors += 1
-        
-        
+        for y_bar in [y-1, y, y+1]:
+            for x_bar in [x-1, x, x+1]:
+                if self.cell(y_bar, x_bar).state() == "#":
+                    occupied_neighbors += 1
+                
         if currently_alive:
+            
+            occupied_neighbors += -1
             
             if occupied_neighbors in range (0,1) or occupied_neighbors in range (4,8):
                 # Death due to loneliness (0,1) or overcrowding (4,8)
