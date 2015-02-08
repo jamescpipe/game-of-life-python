@@ -72,6 +72,7 @@ class world:
             print(row_cell_states)
     
     def cell(self, y, x): 
+        # grid overflows into itself i.e. cell(-1,-1) == cell(n,n)
         size = self.size()
         y = y % size
         x = x % size
