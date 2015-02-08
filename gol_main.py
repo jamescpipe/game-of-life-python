@@ -27,28 +27,6 @@ BIRTH:    If an unoccupied cell has three occupied neighbors, it becomes occupie
 """
 
 import random
-        
-class grid:
-    def __init__(self):
-
-        self.__rows = []
-        
-        self.__rows.append(["_","_","_","A","_","_","_","A","A"])
-        self.__rows.append(["_","A","_","_","_","_","_","_","A"])
-        self.__rows.append(["_","_","_","A","_","_","_","A","_"])
-        self.__rows.append(["_","_","A","_","_","_","A","A","A"])
-        self.__rows.append(["_","_","A","A","_","_","A","A","A"])
-        self.__rows.append(["A","_","_","_","_","_","A","A","A"])
-        self.__rows.append(["_","_","A","_","_","_","_","_","_"])
-        self.__rows.append(["_","_","_","_","_","_","_","_","_"])
-        self.__rows.append(["_","_","_","_","_","_","_","_","_"])
-        self.__rows.append(["_","_","_","A","_","_","_","_","_"])
-
-    def rows(self):
-        return self.__rows
-    
-    def cell(self, y, x):
-        return self.__rows[y][x]
 
 class cell:
     def __init__(self):
@@ -101,15 +79,5 @@ W.print_grid()
 print('Cell in 0,3 is ' + W.cell(0, 3))
 print('Cell in 1,3 is ' + W.cell(1, 3))        
         
-        
-
-
-G = grid()
-
-for y in G.rows():
-    print(y)
-            
-print('This should be A - ' + G.cell(0, 3))
-print('This should be _ - ' + G.cell(1, 3))
 
 
