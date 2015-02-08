@@ -38,6 +38,9 @@ class cell:
                 
     def state(self):
         return self.__state
+        
+    def next_state(self):
+        return self.__next_state
     
     def set_next_state(self, next_state):
         self.__next_state = next_state
@@ -67,17 +70,65 @@ class world:
             for x in range(0, self.__size):
                 row_cell_states.append(self.__grid[y][x].state())
             print(row_cell_states)
-                
-            
     
-    def cell(self, y, x): return self.__grid[y][x].state()
+    def cell(self, y, x): return self.__grid[y][x]
+    
+    def determine_survival(self, y, x):
         
+        currently_alive = (self.cell(y, x).state == "A")
         
-W = world(9)
-W.print_grid()
+        # Count occupied neighbors (including own state for simplicity)
+        occupied_neighbors = 0
+        for j in range(y-1, y+2):
+            for i in range (x-1, x+2):
+                if self.cell(j, i).state() == "A":
+                    occupied_neighbors += 1
+        
+        print(y,x,occupied_neighbors)
+        
+        # Remove cell's own state from count.
+        if currently_alive:
+            occupied_neighbors -= 1  
             
-print('Cell in 0,3 is ' + W.cell(0, 3))
-print('Cell in 1,3 is ' + W.cell(1, 3))        
+            if occupied_neighbors in range (0,1) or occupied_neighbors in range (4,8):
+                # Death due to loneliness (0,1) or overcrowding (4,8)
+                return "_"
+            
+            else: 
+                # Survival to the next generation
+                return "A"
+            
+        else:
+            if occupied_neighbors == 3:
+                # Birth - cell will become occupied next frame
+                return "A"
+            else:
+                return "_"
+                
         
+    
+    def next_frame(self):
+        self.__calc_next_frame()
+        for y in range(0, self.__size):
+            for x in range(0, self.__size):
+                self.cell(y,x).increment_state()
+        return True
+        
+    def __calc_next_frame(self):
+        for y in range(0, self.__size):
+            for x in range(0, self.__size):
+                self.cell(y,x).set_next_state(self.determine_survival(y,x))
+        return True
+        
+        
+my_world = world(9)
+my_world.print_grid()
+my_world.next_frame()
+my_world.print_grid()
+
+
+
+    
+
 
 
