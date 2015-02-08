@@ -62,7 +62,7 @@ class world:
                 row_cell_list.append(cell())
             self.__grid.append(row_cell_list)
     
-    def size(self): return self.size
+    def size(self): return self.__size
     
     def print_grid(self): 
         for y in range(0, self.__size):
@@ -71,11 +71,19 @@ class world:
                 row_cell_states.append(self.__grid[y][x].state())
             print(row_cell_states)
     
-    def cell(self, y, x): return self.__grid[y][x]
+    def cell(self, y, x): 
+        size = self.size()
+        y = y % size
+        x = x % size
+        return self.__grid[y][x]
     
     def determine_survival(self, y, x):
         
-        currently_alive = (self.cell(y, x).state == "A")
+        
+        currently_alive = (self.cell(y, x).state() == "A")
+            
+        print(y,x,currently_alive)
+        
         
         # Count occupied neighbors (including own state for simplicity)
         occupied_neighbors = 0
