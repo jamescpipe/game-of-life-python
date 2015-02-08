@@ -30,15 +30,16 @@ import random
 import time
 
 class cell:
-    def __init__(self):
-        
-        if random.random() > 0.5:
-            self.__state = "#"
-        else:
-            self.__state = " "
-                
+    def __init__(self, state):
+        #expects ' ' or '#'
+        self.__state = state  
+ 
     def state(self):
         return self.__state
+     
+    def set_state(self, state):
+        self.__state = state
+        return True
         
     def next_state(self):
         return self.__next_state
@@ -60,8 +61,18 @@ class world:
         for y in range(0, size):
             row_cell_list = []
             for x in range(0, size):
-                row_cell_list.append(cell())
+                row_cell_list.append(cell(" "))
             self.__grid.append(row_cell_list)
+    
+    def randomize(self):
+        for y in range(0, self.__size):
+            for x in range(0, self.__size):
+                if random.random() > 0.5:
+                    random_state = "#"
+                else:
+                    random_state = " "
+                self.cell(y,x).set_state(random_state)
+        return True
     
     def size(self): return self.__size
     
@@ -79,8 +90,7 @@ class world:
         x = x % size
         return self.__grid[y][x]
     
-    def determine_survival(self, y, x):
-        
+    def __cell_occupied_neighbors(self, y, x): 
         currently_alive = (self.cell(y, x).state() == "#")
 
         # Count occupied neighbors (including own state for simplicity)
@@ -92,11 +102,19 @@ class world:
                     occupied_neighbors += 1
                 
         if currently_alive:
-            
             occupied_neighbors += -1
             
-            if occupied_neighbors in range (0,1) or occupied_neighbors in range (4,8):
-                # Death due to loneliness (0,1) or overcrowding (4,8)
+        return currently_alive, occupied_neighbors
+            
+    
+    def determine_survival(self, y, x):
+        
+        currently_alive, occupied_neighbors = self.__cell_occupied_neighbors(y, x)
+        
+        if currently_alive:
+            
+            if occupied_neighbors in range (0,2) or occupied_neighbors in range (4,9):
+                # Death due to loneliness (0 or 1) or overcrowding (4 -> 8)
                 return " "
             else: 
                 # Survival to the next generation
@@ -109,8 +127,6 @@ class world:
             else:
                 return " "
                 
-        
-    
     def next_frame(self):
         self.__calc_next_frame()
         for y in range(0, self.__size):
@@ -123,24 +139,139 @@ class world:
             for x in range(0, self.__size):
                 self.cell(y,x).set_next_state(self.determine_survival(y,x))
         return True
-        
-        
-my_world = world(9)
-my_world.print_grid()
+            
+    
 
-x = ""
+def test_magic_world_becomes_saturated(myworld):
 
-for i in range(0,100):
-    my_world.next_frame()
+    test, output, expected = [], [], []
+    
+    test.append([' ', ' ', '#'])
+    test.append([' ', '#', ' '])
+    test.append([' ', ' ', '#'])
+    
+    output.append(['?', '?', '?'])
+    output.append(['?', '?', '?'])
+    output.append(['?', '?', '?'])
+    
+    expected.append(['#', '#', '#'])
+    expected.append(['#', '#', '#'])
+    expected.append(['#', '#', '#'])
+
+    for y in range(0,len(test)):
+        for x in range(0,len(test[y])):
+            myworld.cell(y,x).set_state(test[y][x])
+
+    myworld.next_frame()
+    
+    for y in range(0,len(test)):
+        for x in range(0,len(test[y])):
+            output[y][x] = myworld.cell(y,x).state()    
+
+    if output == expected:
+        print('Magic world becomes saturated - PASSED')
+    else:
+        print('Magic world becomes saturated - FAILED')
+        print('Test_grid returned as:')
+        print (output)
+        print('Expected:')
+        print (expected)
+
+def test_saturated_world_dies(myworld):
+
+    test, output, expected = [], [], []
+
+    test.append(['#', '#', '#'])
+    test.append(['#', '#', '#'])
+    test.append(['#', '#', '#'])
+    
+    output.append(['?', '?', '?'])
+    output.append(['?', '?', '?'])
+    output.append(['?', '?', '?'])
+    
+    expected.append([' ', ' ', ' '])
+    expected.append([' ', ' ', ' '])
+    expected.append([' ', ' ', ' '])
+    
+    for y in range(0,len(test)):
+        for x in range(0,len(test[y])):
+            myworld.cell(y,x).set_state(test[y][x])
+
+    myworld.next_frame()
+    
+    for y in range(0,len(test)):
+        for x in range(0,len(test[y])):
+            output[y][x] = myworld.cell(y,x).state()  
+    
+    if output == expected:
+        print('Saturated world dies - PASSED')
+    else:
+        print('Saturated world dies - FAILED')
+        print('output returned as:')
+        print (output)
+        print('Expected:')
+        print (expected)
+    
+def test_dead_world_stays_dead(myworld):
+
+    test, output, expected = [], [], []
+
+    test.append([' ', ' ', ' '])
+    test.append([' ', ' ', ' '])
+    test.append([' ', ' ', ' '])
+    
+    output.append(['?', '?', '?'])
+    output.append(['?', '?', '?'])
+    output.append(['?', '?', '?'])
+    
+    expected.append([' ', ' ', ' '])
+    expected.append([' ', ' ', ' '])
+    expected.append([' ', ' ', ' '])
+    
+    for y in range(0,len(test)):
+        for x in range(0,len(test[y])):
+            myworld.cell(y,x).set_state(test[y][x])
+
+    myworld.next_frame()
+    
+    for y in range(0,len(test)):
+        for x in range(0,len(test[y])):
+            output[y][x] = myworld.cell(y,x).state()  
+    
+    if output == expected:
+        print('Dead world stays dead - PASSED')
+    else:
+        print('Dead world stays dead - FAILED')
+        print('output returned as:')
+        print (output)
+        print('Expected:')
+        print (expected)    
+    
+def run_random_simulation():
+    my_world = world(9)
     my_world.print_grid()
-    print("-----------")
-    time.sleep(1)
-    #x = input("Press Enter to continue, x to end")
+    print("----created-----")
+    my_world.randomize()
+    my_world.print_grid()
+    print("---randomized---")
     
+    x = ""
 
+    for i in range(0,100):
+        my_world.next_frame()
+        my_world.print_grid()
+        print("--------------")
+        time.sleep(0.1)
+        #x = input("Press Enter to continue, x to end")
 
+def run_test_suite():
 
+    myworld = world(3)
     
-
-
-
+    test_magic_world_becomes_saturated(myworld)
+    test_saturated_world_dies(myworld)
+    test_dead_world_stays_dead(myworld)
+    
+if __name__ == "__main__":    
+    
+    run_test_suite()
