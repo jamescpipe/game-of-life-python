@@ -354,7 +354,7 @@ def test_down_arrow_saturates(myworld):
 
 
 def run_random_simulation():
-    my_world = world(70)
+    my_world = world(40)
     my_world.print_grid()
     print("----created-----")
     my_world.randomize()
@@ -369,6 +369,64 @@ def run_random_simulation():
         print("--------------")
         time.sleep(0.1)
         #x = input("Press Enter to continue, x to end")
+        
+def run_glider():
+    myworld = world(8)
+    myworld.print_grid()
+    print("----created-----")
+
+    glider = [['#', ' ', ' '],
+              [' ', '#', '#'],
+              ['#', '#', ' ']]
+
+    for y in range(0,len(glider)):
+        for x in range(0,len(glider[y])):
+            myworld.cell(y,x).set_state(glider[y][x])
+
+    myworld.print_grid()
+    print("---glider created---")
+    
+    x = ""
+
+    for i in range(0,100):
+        myworld.next_frame()
+        myworld.print_grid()
+        print("--------------")
+        time.sleep(0.1)
+        #x = input("Press Enter to continue, x to end")
+
+def run_glider_gun():
+    myworld = world(70)
+    myworld.print_grid()
+    print("----created-----")
+
+    glider_gun =\
+    [[' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+     [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#',' ','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+     [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' ',' ',' ',' ',' ',' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#'],
+     [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#',' ',' ',' ','#',' ',' ',' ',' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#'],
+     ['#','#',' ',' ',' ',' ',' ',' ',' ',' ','#',' ',' ',' ',' ',' ','#',' ',' ',' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+     ['#','#',' ',' ',' ',' ',' ',' ',' ',' ','#',' ',' ',' ','#',' ','#','#',' ',' ',' ',' ','#',' ','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+     [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#',' ',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+     [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+     [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ']]
+
+    for y in range(0,len(glider_gun)):
+        for x in range(0,len(glider_gun[y])):
+            myworld.cell(y,x).set_state(glider_gun[y][x])
+
+    myworld.print_grid()
+    print("---glider gun created---")
+    
+    x = ""
+
+    for i in range(0,600):
+        myworld.next_frame()
+        myworld.print_grid()
+        print("--------------")
+        time.sleep(0.1)
+        #x = input("Press Enter to continue, x to end")
+
 
 def run_test_suite():
 
@@ -384,4 +442,6 @@ def run_test_suite():
 if __name__ == "__main__":    
     
     run_test_suite()
-    run_random_simulation()
+    #run_random_simulation()
+    #run_glider()
+    run_glider_gun()
